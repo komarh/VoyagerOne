@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "f:\\mvmnt\\projects\\voyagerone\\voyagerone\\voyagerone\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voyagerone\\permoduleinline.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "f:\\mvmnt\\projects\\voyagerone\\voyagerone\\voyagerone\\intermediate\\build\\win64\\x64\\voyageroneeditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "f:\\mvmnt\\projects\\voyagerone\\voyagerone\\voyagerone\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voyagerone\\definitions.voyagerone.h",
+            "f:\\epic games launcher\\ue_5.5\\engine\\source\\runtime\\core\\public\\hal\\permoduleinline.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

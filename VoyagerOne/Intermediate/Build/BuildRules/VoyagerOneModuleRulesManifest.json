@@ -1,0 +1,8 @@
+{
+	"SourceFiles": [
+		"F:\\MVMNT\\Projects\\VoyagerOne\\VoyagerOne\\VoyagerOne\\Source\\VoyagerOne\\VoyagerOne.Build.cs",
+		"F:\\MVMNT\\Projects\\VoyagerOne\\VoyagerOne\\VoyagerOne\\Source\\VoyagerOne.Target.cs",
+		"F:\\MVMNT\\Projects\\VoyagerOne\\VoyagerOne\\VoyagerOne\\Source\\VoyagerOneEditor.Target.cs"
+	],
+	"EngineVersion": "5.5.4"
+}
