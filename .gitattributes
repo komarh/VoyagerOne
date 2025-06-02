@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+# Treat UE4/5 binary assets as binary (no diffs)
+*.uasset binary
+*.umap binary
+*.ubulk binary
+*.uexp binary
+*.usf binary
+
