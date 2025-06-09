@@ -41,19 +41,37 @@ class AVoyagerOneCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
 
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+        /** Look Input Action */
+        UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+        class UInputAction* LookAction;
+
+       /** Forward launch velocity when vaulting */
+       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+       float VaultForwardSpeed = 600.f;
+
+       /** Upward launch velocity when vaulting */
+       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+       float VaultUpSpeed = 420.f;
 	
 public:
 	AVoyagerOneCharacter();
 
 protected:
-	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
+        /** Called for movement input */
+        void Move(const FInputActionValue& Value);
 
-	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
+        /** Called for looking input */
+        void Look(const FInputActionValue& Value);
+
+       /** Called when jump action starts and attempts vault or climb */
+       void OnJumpActionStarted();
+
+       /** Server side handler for jump or vault */
+       UFUNCTION(Server, Reliable)
+       void ServerJumpOrVault();
+
+       /** Checks for vaulting or climbing opportunity and performs movement */
+       bool TryVaultOrClimb();
 
 protected:
 	// APawn interface

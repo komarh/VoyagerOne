@@ -10,6 +10,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
+#include "Engine/EngineTypes.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -58,9 +60,9 @@ void AVoyagerOneCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+               // Jumping or vaulting
+               EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AVoyagerOneCharacter::OnJumpActionStarted);
+               EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AVoyagerOneCharacter::Move);
@@ -98,5 +100,45 @@ void AVoyagerOneCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
-	}
+        }
+}
+
+void AVoyagerOneCharacter::OnJumpActionStarted()
+{
+       if (Controller)
+       {
+               ServerJumpOrVault();
+       }
+}
+
+void AVoyagerOneCharacter::ServerJumpOrVault_Implementation()
+{
+       if (!TryVaultOrClimb())
+       {
+               Jump();
+       }
+}
+
+bool AVoyagerOneCharacter::TryVaultOrClimb()
+{
+       FVector Start = GetActorLocation() + FVector(0.f, 0.f, 50.f);
+       FVector Forward = GetActorForwardVector();
+       FVector End = Start + Forward * 100.f;
+
+       FHitResult Hit;
+       FCollisionQueryParams Params(SCENE_QUERY_STAT(VaultTrace), false, this);
+       if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
+       {
+               // check space above obstacle
+               FVector UpCheckStart = Hit.Location + FVector(0.f, 0.f, 60.f);
+               FVector UpCheckEnd = UpCheckStart + FVector(0.f, 0.f, 40.f);
+               if (!GetWorld()->LineTraceTestByChannel(UpCheckStart, UpCheckEnd, ECC_Visibility, Params))
+               {
+                       FVector LaunchVelocity = Forward * VaultForwardSpeed + FVector(0.f, 0.f, VaultUpSpeed);
+                       LaunchCharacter(LaunchVelocity, true, true);
+                       return true;
+               }
+       }
+
+       return false;
 }
